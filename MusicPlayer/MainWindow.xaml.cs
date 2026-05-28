@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using Winforms = System.Windows.Forms;
@@ -15,6 +14,10 @@ namespace MusicPlayer
         private string musicFolderPath = string.Empty;
         private AudioFileReader audioFile;
         private WaveOutEvent outputDevice;
+        private List<string> playlist = new List<string>();
+        private int currentTrackIndex = 0;
+        private bool loopPlaylist = false;
+        private bool loopSong = false;
 
 
 
@@ -26,35 +29,37 @@ namespace MusicPlayer
             timer.Interval = TimeSpan.FromMilliseconds(200);
             timer.Tick += Timer_Tick;
             timer.Start();
-        }
+
+            musicFolderPath = Properties.Settings.Default.LastFolder;
 
 
-
-
-        private void outputDevice_PlaybackStopped(object sender, StoppedEventArgs e)
-        {
-            Dispatcher.Invoke(() =>
+            if(!string.IsNullOrEmpty(musicFolderPath) && Directory.Exists(musicFolderPath))
             {
-                Play.Content = "Play";
-                running = false;
-
-                if (audioFile != null)
+                LoadPlaylist(musicFolderPath);
+                string songFile = playlist[currentTrackIndex];
+                if (songFile != null)
                 {
-                    audioFile.Position = 0;
+                    LoadSongInfo(songFile);
                 }
-            });
+            }
+            Volume.Value = Properties.Settings.Default.Volume;
         }
 
         private void PlaySong(string filePath)
         {
-            outputDevice?.Stop();
-            outputDevice?.Dispose();
+            if (outputDevice != null)
+            {
+                outputDevice.PlaybackStopped -= outputDevice_PlaybackStopped;
+                outputDevice?.Stop();
+                outputDevice?.Dispose();
+            }
             audioFile?.Dispose();
 
             outputDevice = new WaveOutEvent();
             audioFile = new AudioFileReader(filePath);
 
             outputDevice.Init(audioFile);
+            outputDevice.Volume = (float)(Volume.Value / 100.0);
 
             outputDevice.PlaybackStopped += outputDevice_PlaybackStopped;
             outputDevice.Play();
@@ -80,8 +85,31 @@ namespace MusicPlayer
                 if(dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     musicFolderPath = dialog.SelectedPath;
+
+                    Properties.Settings.Default.LastFolder = musicFolderPath;
+                    Properties.Settings.Default.Save();
+                    LoadPlaylist(musicFolderPath);
+                    string songFile = GetFirstSong(musicFolderPath);
+                    if (songFile != null)
+                    {
+                        LoadSongInfo(songFile);
+                    }
+                    if(songFile == null)
+                    {
+                        SongName.Text = "No songs found in folder";
+                        ArtistName.Text = "Error";
+                    }
                 }
             }
+        }
+
+        private void LoadPlaylist(string folder)
+        {
+            var extensions = new[] { ".mp3", ".wav", ".flac", ".aac", ".m4a" };
+            playlist = Directory.EnumerateFiles(folder, "*.*", SearchOption.AllDirectories)
+                                .Where(file => extensions.Contains(Path.GetExtension(file).ToLower()))
+                                .ToList();
+            currentTrackIndex = 0;
         }
 
         // Event handler for the Play button click event
@@ -89,12 +117,19 @@ namespace MusicPlayer
         //swap the text of the Play button to "Pause" and change the event handler to handle the Pause functionality
         private void Play_Click(object sender, RoutedEventArgs e)
         {
+            if (audioFile != null)
+            {
+                outputDevice.Volume = (float)(Volume.Value / 100.0);
+            }
             if (audioFile == null) {
-                string songFile = GetFirstSong(musicFolderPath);
-                if (songFile == null)
+                if (playlist.Count == 0)
                 {
+                    SongName.Text = "No songs found in folder";
+                    ArtistName.Text = "Error";
                     return;
                 }
+                string songFile = playlist[currentTrackIndex];
+
                 LoadSongInfo(songFile);
                 PlaySong(songFile);
                 Play.Content = "Pause";
@@ -121,14 +156,69 @@ namespace MusicPlayer
             
         }
 
+        private void outputDevice_PlaybackStopped(object sender, StoppedEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (!running) return;
+                if (currentTrackIndex == playlist.Count - 1 && loopPlaylist == false)
+                {
+                    Play.Content = "Play";
+                    running = false;
+
+                    if (audioFile != null)
+                    {
+                        audioFile.Position = 0;
+                    }
+                }
+                else if (loopSong)
+                {
+                    if (audioFile != null)
+                    {
+                        audioFile.Position = 0;
+                    }
+                    PlaySong(playlist[currentTrackIndex]);
+                    Play.Content = "Pause";
+                    running = true;
+                }
+                else
+                {
+                    currentTrackIndex = (currentTrackIndex + 1) % playlist.Count;
+                    string nextSong = playlist[currentTrackIndex];
+                    LoadSongInfo(nextSong);
+                    PlaySong(nextSong);
+
+                    Play.Content = "Pause";
+                    running = true;
+                }
+            });
+        }
+
         private void Next_Click(object sender, RoutedEventArgs e)
         {
+            if (playlist.Count == 0) return;
 
+            currentTrackIndex = (currentTrackIndex + 1) % playlist.Count;
+
+            string nextSong = playlist[currentTrackIndex];
+            LoadSongInfo(nextSong);
+            PlaySong(nextSong);
+
+            Play.Content = "Pause";
+            running = true;
         }
 
         private void Prev_Click(object sender, RoutedEventArgs e)
         {
+            if (playlist.Count == 0) return;
+            currentTrackIndex = (currentTrackIndex - 1 + playlist.Count) % playlist.Count;
 
+            string prevSong = playlist[currentTrackIndex];
+            LoadSongInfo(prevSong);
+            PlaySong(prevSong);
+
+            Play.Content = "Pause";
+            running = true;
         }
        
         private void LoadSongInfo(String filePath)
@@ -184,8 +274,10 @@ namespace MusicPlayer
         {
             if(audioFile != null)
             {
-                audioFile.Volume = (float)(Volume.Value/100.0);
+                outputDevice.Volume = (float)(Volume.Value/100.0);
             }
+            Properties.Settings.Default.Volume = Volume.Value;
+            Properties.Settings.Default.Save();
         }
     }
 }
