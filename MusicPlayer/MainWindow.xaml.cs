@@ -1,10 +1,11 @@
-﻿using System.IO;
+﻿using NAudio.Wave;
+using System.IO;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using Winforms = System.Windows.Forms;
-using TagLib;
-using NAudio.Wave;
 using System.Windows.Threading;
+using TagLib;
+using Winforms = System.Windows.Forms;
 
 namespace MusicPlayer
 {
@@ -31,9 +32,10 @@ namespace MusicPlayer
             timer.Start();
 
             musicFolderPath = Properties.Settings.Default.LastFolder;
+            loop.Content = "No Loop";
+            Shuffle.Content = "noShuff";
 
-
-            if(!string.IsNullOrEmpty(musicFolderPath) && Directory.Exists(musicFolderPath))
+            if (!string.IsNullOrEmpty(musicFolderPath) && Directory.Exists(musicFolderPath))
             {
                 LoadPlaylist(musicFolderPath);
                 string songFile = playlist[currentTrackIndex];
@@ -132,7 +134,8 @@ namespace MusicPlayer
 
                 LoadSongInfo(songFile);
                 PlaySong(songFile);
-                Play.Content = "Pause";
+                Play.Tag = "/Art/pause.png";
+                Play.Uid = "Art/pause-highlight.png";
                 running = true;
                 return;
             }
@@ -141,7 +144,8 @@ namespace MusicPlayer
             {
                 // Pause the music
                 outputDevice.Stop();
-                Play.Content = "Play";
+                Play.Tag = "/Art/play.png";
+                Play.Uid = "Art/play-highlight.png";
                 running = false;
                 
             }
@@ -149,7 +153,8 @@ namespace MusicPlayer
             {
                 // Play the music
                 outputDevice.Play();
-                Play.Content = "Pause";
+                Play.Tag = "/Art/pause.png";
+                Play.Uid = "Art/pause-highlight.png";
                 running = true;
                 
             }
@@ -163,7 +168,8 @@ namespace MusicPlayer
                 if (!running) return;
                 if (currentTrackIndex == playlist.Count - 1 && loopPlaylist == false)
                 {
-                    Play.Content = "Play";
+                    Play.Tag = "/Art/play.png";
+                    Play.Uid = "Art/play-highlight.png";
                     running = false;
 
                     if (audioFile != null)
@@ -178,7 +184,8 @@ namespace MusicPlayer
                         audioFile.Position = 0;
                     }
                     PlaySong(playlist[currentTrackIndex]);
-                    Play.Content = "Pause";
+                    Play.Tag = "/Art/pause.png";
+                    Play.Uid = "Art/pause-highlight.png";
                     running = true;
                 }
                 else
@@ -188,7 +195,8 @@ namespace MusicPlayer
                     LoadSongInfo(nextSong);
                     PlaySong(nextSong);
 
-                    Play.Content = "Pause";
+                    Play.Tag = "/Art/pause.png";
+                    Play.Uid = "Art/pause-highlight.png";
                     running = true;
                 }
             });
@@ -204,7 +212,8 @@ namespace MusicPlayer
             LoadSongInfo(nextSong);
             PlaySong(nextSong);
 
-            Play.Content = "Pause";
+            Play.Tag = "/Art/pause.png";
+            Play.Uid = "Art/pause-highlight.png";
             running = true;
         }
 
@@ -217,7 +226,8 @@ namespace MusicPlayer
             LoadSongInfo(prevSong);
             PlaySong(prevSong);
 
-            Play.Content = "Pause";
+            Play.Tag = "/Art/pause.png";
+            Play.Uid = "Art/pause-highlight.png";
             running = true;
         }
        
@@ -267,6 +277,7 @@ namespace MusicPlayer
             {
                 SongProgress.Value = audioFile.CurrentTime.TotalSeconds;
                 SongProgress.Maximum = audioFile.TotalTime.TotalSeconds;
+                SongLength.Text = $"{audioFile.CurrentTime:mm\\:ss} / {audioFile.TotalTime:mm\\:ss}";
             }
         }
 
@@ -278,6 +289,72 @@ namespace MusicPlayer
             }
             Properties.Settings.Default.Volume = Volume.Value;
             Properties.Settings.Default.Save();
+        }
+
+        private void Loop_Click(object sender, RoutedEventArgs e)
+        {
+            if (loop.Content =="No Loop")
+            {
+                loop.Content = "Loop";
+
+                loop.Tag = "/Art/loop.png";
+                loop.Uid = "Art/loop-highlight.png";
+
+                loopPlaylist = true;
+                loopSong = false;
+            }
+            else if (loop.Content == "Loop")
+            {
+                loop.Content = "Loop 1";
+
+                loop.Tag = "/Art/loop-song.png";
+                loop.Uid = "Art/loop-song-highlight.png";
+
+                loopPlaylist = false;
+                loopSong = true;
+            }
+            else
+            {
+                loop.Content = "No Loop";
+
+                loop.Tag = "/Art/no-loop.png";
+                loop.Uid = "Art/no-loop-highlight.png";
+
+                loopPlaylist = false;
+                loopSong = false;
+            }
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void Min_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void DragWindow(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+                DragMove();
+        }
+
+        private void Shuffle_Click(object sender, RoutedEventArgs e)
+        {
+            if(Shuffle.Content == "noShuff")
+            {
+                Shuffle.Content = "shuff";
+                Shuffle.Tag = "/Art/shuffle.png";
+                Shuffle.Uid = "/Art/shuffle-highlight.png";
+            }
+            else
+            {
+                Shuffle.Content = "noShuff";
+                Shuffle.Tag = "/Art/no-shuffle.png";
+                Shuffle.Uid = "/Art/no-shuffle-highlight.png";
+            }
         }
     }
 }

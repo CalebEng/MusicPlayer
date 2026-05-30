@@ -1,18 +1,47 @@
 ﻿<Window x:Class="MusicPlayer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Music Player" Height="600" Width="400"
+        Title="Silverlight FM" Height="600" Width="400"
         MinHeight="600"
         MinWidth="400"
-        >
+        WindowStyle="None">
+    <Window.Resources>
+        <Style x:Key="ImageButton" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Image x:Name="NormalImage"
+                                   Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Tag}"/>
+
+                            <Image x:Name="HoverImage"
+                                   Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Uid}"
+                                   Opacity="0"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="NormalImage" Property="Opacity" Value="0"/>
+                                <Setter TargetName="HoverImage" Property="Opacity" Value="1"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="HoverImage" Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
 
     <Grid>
-
-        <!-- Define responsive layout -->
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="auto" MinHeight="40"/>
+            <RowDefinition Height="Auto" MinHeight="35"/>
             <!-- Folder button -->
-            <RowDefinition Height="*"/>
+            <RowDefinition/>
             <!-- Album art + text -->
             <RowDefinition Height="Auto"/>
             <!-- Media buttons -->
@@ -26,97 +55,190 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Drag Region -->
+        <Grid Grid.Row="0"
+              Grid.ColumnSpan="3"
+              Background="Transparent"
+              MouseLeftButtonDown="DragWindow"/>
 
-        <!-- FOLDER BUTTON (Top Left) -->
+        <!-- Window Control Buttons -->
+        <StackPanel Grid.Row="0"
+                Grid.Column="2"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0,0,5,0"
+                Width="120"
+                Height="33">
+
+            <!-- Minimize Button -->
+            <Button x:Name="Min"
+                    Width="55"
+                    Height="33"
+                    Margin="0,0,10,0"
+                    Style="{StaticResource ImageButton}"
+                    Tag="/Art/min.png"
+                    Uid="/Art/min_highlight.png"
+                    Click="Min_Click"/>
+
+            <!-- Exit Button -->
+            <Button x:Name="Exit"
+                    Width="55"
+                    Height="33"
+                    Style="{StaticResource ImageButton}"
+                    Tag="/Art/close.png"
+                    Uid="/Art/close_highlight.png"
+                    Click="Exit_Click"/>
+
+        </StackPanel>
+
+
+
+        <!-- Folder Button -->
         <Button x:Name="FolderFinder"
                 Content="Folder"
-                Grid.Row="0"
-                Grid.Column="0"
-                HorizontalAlignment="Left"
-                Margin="10"
-                Click="FindFolder"/>
+                Grid.Row="1"
+                Grid.Column="2"
+                HorizontalAlignment="Right"
+                Margin="0,0,10,0"
+                Click="FindFolder" Width="37" Height="20" VerticalAlignment="Center"/>
 
 
-        <!-- ALBUM ART + ARTIST + SONG (Centered) -->
-        <StackPanel Grid.Row="1"
+        <!-- Album art, Artist, Song name -->
+        <StackPanel Grid.Row="2"
                     Grid.ColumnSpan="3"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Center">
+                    HorizontalAlignment="center"
+                    VerticalAlignment="Center" Height="370" 
+                    Margin="0,0,0,0" Width="360">
+            <StackPanel.Background>
+                <ImageBrush ImageSource="/Art/Music player window2.png"/>
+            </StackPanel.Background>
 
             <!-- Artist Name -->
-            <TextBlock x:Name="ArtistName"
-                       Text=""
-                       FontSize="18"
-                       HorizontalAlignment="Center"
-                       Margin="0,10"/>
+            <Viewbox HorizontalAlignment="Left" Stretch="Uniform" StretchDirection="DownOnly" 
+                     Height="18" Width="197"
+                     Margin="10,4,0,0">
+                <TextBlock x:Name="ArtistName"
+                           Text=""
+                           FontFamily="pack://application:,,,/Fonts/#Interceptor"
+                           FontSize="18"
+                           TextAlignment="left"/>
+            </Viewbox>
 
             <!-- Album Art -->
-            <Border Width="250" Height="250"
+            <Border Width="240" Height="240"
                     ClipToBounds="True"
                     HorizontalAlignment="Center"
-                    Margin="0,10">
+                    Margin="0,25,0,15">
                 <Image x:Name="AlbumArt"
                        Stretch="Uniform"/>
             </Border>
+            <!-- Song Name-->
+            <Viewbox Stretch="Uniform" StretchDirection="DownOnly" Height="30" Width="245"
+                     Margin="0,0,0,10">
+                <TextBlock x:Name="SongName"
+                           Text=""
+                           FontFamily="pack://application:,,,/Fonts/#Interceptor"
+                           FontSize="18"
+                           TextAlignment="Center"/>
+            </Viewbox>
 
-            <!-- Song Name -->
-            <TextBlock x:Name="SongName"
+            <TextBlock x:Name="SongLength"
                        Text=""
-                       FontSize="18"
-                       HorizontalAlignment="Center"
-                       Margin="0,10"/>
+                       HorizontalAlignment="center"
+                       Margin="0,0,0,0"
+                       FontFamily="pack://application:,,,/Fonts/#Interceptor"
+                       FontSize="12"
+                       TextAlignment="Center">
+            </TextBlock>
         </StackPanel>
 
 
-        <!-- MEDIA BUTTONS -->
-        <StackPanel Grid.Row="2"
+        <!-- Media Buttons -->
+        <StackPanel Grid.Row="3"
                     Grid.ColumnSpan="3"
-                    Orientation="Horizontal"
                     HorizontalAlignment="Center"
-                    Margin="0,20">
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal"
+                    Margin="0,20,0,10">
+
+            <Button x:Name="Shuffle"
+                    Content="noShuff" 
+                    Width="50"
+                    Height="50"
+                    Margin="10"
+                    Style="{StaticResource ImageButton}"
+                    Tag="/Art/no-shuffle.png"
+                    Uid="/Art/no-shuffle-highlight.png"
+                    Click="Shuffle_Click" FontSize="10"/>
 
             <Button x:Name="Prev"
-                    Content="Prev"
                     Width="60"
                     Height="40"
                     Margin="10"
+                    Style="{StaticResource ImageButton}"
+                    Tag="/Art/next-prev-rev.png"
+                    Uid="/Art/next-prev-rev-highlight.png"
                     Click="Prev_Click"/>
 
             <Button x:Name="Play"
-                    Content="Play"
                     Width="60"
                     Height="40"
                     Margin="10"
+                    Style="{StaticResource ImageButton}"
+                    Tag="/Art/play.png"
+                    Uid="/Art/play-highlight.png"
                     Click="Play_Click"/>
 
             <Button x:Name="Next"
-                    Content="Next"
                     Width="60"
                     Height="40"
                     Margin="10"
-                    Click="Next_Click"/>
+                    Style="{StaticResource ImageButton}"
+                    Tag="/Art/next-prev.png"
+                    Uid="/Art/next-prev-highlight.png"
+                    Click="Next_Click">
+            </Button>
+
+            <!-- Loop Song, Loop Playlist, No Loop-->
+            <Button x:Name="loop"
+                    Content="No Loop"
+                    Width="50"
+                    Margin="10"
+                    Height="50"
+                    Style="{StaticResource ImageButton}"
+                    Tag="/Art/no-loop.png"
+                    Uid="/Art/no-loop-highlight.png"
+                    Click="Loop_Click" FontSize="10"/>
         </StackPanel>
 
 
-        <!-- SLIDER -->
-        <Slider x:Name="Volume"
-                Minimum="0"
-                Maximum="100"
-                Grid.Row="3"
-                Grid.ColumnSpan="3"
-                Width="200"
-                HorizontalAlignment="Center"
-                Margin="0,20"
-                ValueChanged="Volume_ValueChanged"/>
 
+
+
+
+        <!-- Song Progess-->
         <ProgressBar  x:Name="SongProgress"
-                     Grid.ColumnSpan="3"
-                     Height="9" Margin="80,10,80,0" 
-                     HorizontalAlignment="Stretch"
-                     MinWidth="220"
-                     MaxWidth="640"
-                     Grid.Row="2" VerticalAlignment="Top"
-                     PreviewMouseUp="ProgressBar_PreviewMouseUp"/>
+            Grid.ColumnSpan="3"
+            Height="9" Margin="80,10,80,0"
+            MinWidth="220"
+            MaxWidth="640"
+            Grid.Row="3" VerticalAlignment="Top"
+            PreviewMouseUp="ProgressBar_PreviewMouseUp"/>
+
+        <!-- Volume Slider -->
+        <Slider x:Name="Volume"
+            Minimum="0"
+            Maximum="100"
+            Grid.Row="4"
+            Grid.ColumnSpan="3"
+            Width="200"
+            HorizontalAlignment="Center"
+            Margin="0,0,0,20"
+            ValueChanged="Volume_ValueChanged"/>
+
+
+
 
     </Grid>
 </Window>

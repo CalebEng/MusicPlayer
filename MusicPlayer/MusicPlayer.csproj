@@ -10,6 +10,37 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Art\close.png" />
+    <None Remove="Art\close_highlight.png" />
+    <None Remove="Art\loop-highlight.png" />
+    <None Remove="Art\loop-song-highlight.png" />
+    <None Remove="Art\loop-song.png" />
+    <None Remove="Art\loop.png" />
+    <None Remove="Art\min.png" />
+    <None Remove="Art\min_highlight.png" />
+    <None Remove="Art\Music player window.png" />
+    <None Remove="Art\Music player window2.png" />
+    <None Remove="Art\next-prev-highlight.png" />
+    <None Remove="Art\next-prev-rev-highlight.png" />
+    <None Remove="Art\next-prev-rev.png" />
+    <None Remove="Art\next-prev.png" />
+    <None Remove="Art\no-loop-highlight.png" />
+    <None Remove="Art\no-loop.png" />
+    <None Remove="Art\no-shuffle-highlight.png" />
+    <None Remove="Art\no-shuffle.png" />
+    <None Remove="Art\pause-highlight.png" />
+    <None Remove="Art\pause.png" />
+    <None Remove="Art\play-highlight.png" />
+    <None Remove="Art\play.png" />
+    <None Remove="Art\shuffle-highlight.png" />
+    <None Remove="Art\shuffle.png" />
+    <None Remove="Fonts\Interceptor Bold Italic.otf" />
+    <None Remove="Fonts\Interceptor Bold.otf" />
+    <None Remove="Fonts\Interceptor Italic.otf" />
+    <None Remove="Fonts\Interceptor.otf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="NAudio" Version="2.3.0" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
   </ItemGroup>
@@ -27,6 +58,93 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Art\close.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\close_highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\loop-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\loop-song-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\loop-song.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\loop.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\min.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\min_highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\Music player window.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\Music player window2.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\next-prev-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\next-prev-rev-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\next-prev-rev.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\next-prev.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\no-loop-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\no-loop.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\no-shuffle-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\no-shuffle.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\pause-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\pause.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\play-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\play.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\shuffle-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\shuffle.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Fonts\Interceptor Bold Italic.otf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Fonts\Interceptor Bold.otf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Fonts\Interceptor Italic.otf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Fonts\Interceptor.otf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
