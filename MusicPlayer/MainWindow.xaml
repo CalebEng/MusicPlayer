@@ -5,6 +5,14 @@
         MinHeight="600"
         MinWidth="400"
         WindowStyle="None">
+    
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="LightSlateGray" Offset="0"/>
+            <GradientStop Color="SlateGray" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    
     <Window.Resources>
         <Style x:Key="ImageButton" TargetType="Button">
             <Setter Property="BorderThickness" Value="0"/>
@@ -34,6 +42,7 @@
             </Setter>
         </Style>
     </Window.Resources>
+    
 
 
     <Grid>
@@ -224,7 +233,8 @@
             MinWidth="220"
             MaxWidth="640"
             Grid.Row="3" VerticalAlignment="Top"
-            PreviewMouseUp="ProgressBar_PreviewMouseUp"/>
+            Foreground="#FFAF3931"
+            />
 
         <!-- Volume Slider -->
         <Slider x:Name="Volume"
