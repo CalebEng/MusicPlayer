@@ -29,6 +29,7 @@ namespace MusicPlayer
         private bool loopSong = false;
 
         private bool isAddingSongs = false;
+        private bool isDeleting = false;
         private string playlistFolder = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "SilverlightFM",
@@ -494,6 +495,15 @@ namespace MusicPlayer
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
+
+            var temp = PlaylistSelection.SelectedItem as Playlist;
+            if(temp.Name == "All Songs") return;
+            isDeleting = true;
+            LibraryGrid.ItemsSource = temp.Songs;
+            librarySection.Visibility = Visibility.Visible;
+            Playlists_section.Visibility = Visibility.Collapsed;
+            Playlists.Content = "Playlists";
+
             SavePlaylist();
         }
 
@@ -504,7 +514,9 @@ namespace MusicPlayer
             isAddingSongs = true;
             LibraryGrid.ItemsSource = playlists[0].Songs;
             librarySection.Visibility = Visibility.Visible;
-            SavePlaylist();
+            Playlists_section.Visibility = Visibility.Collapsed;
+            Playlists.Content = "Playlists";
+            
 
         }
 
@@ -518,6 +530,7 @@ namespace MusicPlayer
                 if (song == null || playlist == null || playlist.Name == "All Songs") return;
 
                 playlist.Songs.Add(song);
+                song.Id= playlist.Songs.Count-1;
                 librarySection.Visibility = Visibility.Collapsed;
                 PlayerView.Visibility = Visibility.Visible;
                 LibraryGrid.SelectedItem = null;
@@ -528,6 +541,34 @@ namespace MusicPlayer
                 string songFile = currentPlaylist.Songs[currentTrackIndex].FilePath;
 
                 LoadSongInfo(songFile);
+                SavePlaylist();
+            }
+            if (isDeleting)
+            {
+                var song = LibraryGrid.SelectedItem as SongInfo;
+                var playlist = PlaylistSelection.SelectedItem as Playlist;
+
+                if(song == null || playlist == null || playlist.Name == "All Songs") return;
+                
+                if(song.Id == currentTrackIndex)
+                {
+                    ClearCurrentSong();
+                    currentTrackIndex = 0;
+                    SongName.Text = "No song selected";
+                    ArtistName.Text = "Select a song to play";
+                    AlbumArt.Source = null;
+                }
+                playlist.Songs.RemoveAt(song.Id);
+
+                librarySection.Visibility = Visibility.Collapsed;
+                PlayerView.Visibility= Visibility.Visible;
+                LibraryGrid.SelectedItem= null;
+                Library.Content = "Library";
+                isDeleting = false;
+                LibraryGrid.ItemsSource = null;
+                LibraryGrid.ItemsSource = playlist.Songs;
+                SavePlaylist();
+
             }
 
         }
@@ -575,6 +616,72 @@ namespace MusicPlayer
                 playlists = JsonSerializer.Deserialize<List<Playlist>>(json);
                 PlaylistSelection.ItemsSource = playlists;
             }
+        }
+
+        private void RenamePlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            var playlist = PlaylistSelection.SelectedItem as Playlist;
+            if(playlist == null || playlist.Name == "All Songs") return;
+
+            RenameSection.Text = playlist.Name;
+
+            PlaylistEditSection.Visibility = Visibility.Collapsed;
+            RenameSection.Visibility = Visibility.Visible;
+
+            RenameSection.Focus();
+            RenameSection.SelectAll();
+
+            
+        }
+
+        private void DeletePlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            var playlist = PlaylistSelection.SelectedItem as Playlist;
+
+            if(playlist == null || playlist.Name == "All Songs") return;
+
+            if(playlist == currentPlaylist)
+            {
+                ClearCurrentSong();
+                currentPlaylist = playlists[0];
+                LibraryGrid.ItemsSource = currentPlaylist.Songs;
+                currentTrackIndex = 0;
+                var temp = currentPlaylist.Songs[currentTrackIndex].FilePath;
+
+                LoadSongInfo(temp);
+            }
+            playlists.Remove(playlist);
+            SavePlaylist();
+            PlaylistSelection.ItemsSource = null;
+            PlaylistSelection.ItemsSource = playlists;
+            
+
+        }
+
+        private void RenameSection_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                RenameConfirm(sender, e);
+            }
+        }
+
+        private void RenameConfirm(object sender, RoutedEventArgs e)
+        {
+            var playlist = PlaylistSelection.SelectedItem as Playlist;
+
+            String newName = RenameSection.Text.Trim();
+            if(String.IsNullOrEmpty(newName)) return;
+
+            if (playlist == null || playlist.Name == "All Songs") return;
+
+            playlist.Name = newName;
+
+            PlaylistSelection.Items.Refresh();
+            SavePlaylist();
+
+            RenameSection.Visibility = Visibility.Collapsed;
+            PlaylistEditSection.Visibility = Visibility.Visible;
         }
     }
 }

@@ -11,5 +11,6 @@ namespace MusicPlayer
         public string Album { get; set; }
         public string Length { get; set; }
         public string FilePath { get; set; }
+        public int Id { get; set; }
     }
 }

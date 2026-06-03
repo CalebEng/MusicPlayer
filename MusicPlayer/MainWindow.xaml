@@ -178,8 +178,7 @@
                             ClipToBounds="True"
                             HorizontalAlignment="Center"
                             Margin="0,25,0,15">
-
-                    <Image x:Name="AlbumArt"
+                        <Image x:Name="AlbumArt"
                             Stretch="Uniform"/>
                     </Border>
 
@@ -380,47 +379,62 @@
 
 
             <!-- Header with button -->
-            <Grid Grid.Row="0" Margin="5">
+            <Grid Grid.Row="0" Margin="5,10,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Playlists"
-                       VerticalAlignment="Center"
-                       Foreground="White"
-                       FontWeight="Bold"/>
-
+                <Button Grid.Column="0"
+                        x:Name="RenamePlaylist"
+                        Content="N"
+                        Width="24"
+                        Height="24" Click="RenamePlaylist_Click"/>
                 <Button Grid.Column="1"
+                        x:Name="DeletePlaylist"
+                        Content="-"
+                        Height="24"
+                        Width="24" Click="DeletePlaylist_Click"/>
+
+                <Button Grid.Column="2"
                         x:Name="NewPlaylistBtn"
                         Content="+"
                         Width="24"
                         Height="24"
-                        Margin="5,0,0,0"
+                        Margin="0,0,0,0"
                         Click="NewPlaylist_Click"/>
             </Grid>
 
             <Grid Grid.Row="1" Margin="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                
-                <!-- New Playlist Button -->
-                <Button x:Name="AddSong"
+                <Grid x:Name="PlaylistEditSection">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- New Playlist Button -->
+                    <Button x:Name="AddSong"
                         IsEnabled="False"
                         Content="Add"
                         Height="30"
                         Margin="5"
                         Click="AddSong_Click"/>
 
-                <Button x:Name="DeleteSong"
+                    <Button x:Name="DeleteSong"
                         IsEnabled="False"
                         Grid.Column="1"
                         Content="Delete"
                         Height="30"
                         Margin="5"
                         Click="Delete_Click"/>
+                </Grid>
+                
+                <TextBox x:Name ="RenameSection"
+                         TextWrapping="Wrap" Text="Rename" 
+                         Height="30"
+                         Visibility="Collapsed" Background="White"
+                         KeyDown="RenameSection_KeyDown"/>
             </Grid>
             <!-- List -->
                 <ListView x:Name="PlaylistSelection"
@@ -446,13 +460,12 @@
                         </Style>
                     </ListView.Resources>
 
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Name}"/>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-
-                </ListView>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
 
         </Grid>
 
