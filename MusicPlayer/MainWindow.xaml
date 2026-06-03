@@ -286,48 +286,82 @@
 
         </Grid>
 
-        <DataGrid x:Name = "LibraryGrid"
+        <Grid x:Name="librarySection"
+                    Grid.Row="2"
+                    Grid.RowSpan="3"
+                    Grid.ColumnSpan="3"
+                    Background="#1E1E1E"
+                    Visibility="Collapsed">
+            
+            <DataGrid x:Name = "LibraryGrid"
                   Grid.Row="2"
                   Grid.RowSpan="3"
                   Grid.ColumnSpan="3"
-                  Margin="10"
-                  Visibility="Collapsed"
+                  Margin="20,10,20,30"
+                  Visibility="Visible"
                   AutoGenerateColumns="False"
                   ColumnWidth="*"
+                  RowHeight="23"
                   CanUserReorderColumns="False"
-                  IsReadOnly="True">
+                  IsReadOnly="True"
+                  RowBackground="Transparent"
+                  AlternatingRowBackground="Transparent"
+                  Background="Transparent"
+                  HeadersVisibility="Column"
+                  VerticalScrollBarVisibility="Hidden"
+                  HorizontalGridLinesBrush="SkyBlue"
+                  VerticalGridLinesBrush="Transparent"
+                  Foreground="LightSkyBlue"
+                  BorderThickness="0"
+                  SelectionChanged="LibraryGrid_SelectionChanged"
+                  >
+                <DataGrid.RowHeaderStyle>
+                    <Style TargetType="DataGridRowHeader">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </Style>
+                </DataGrid.RowHeaderStyle>
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Title" Binding="{Binding Title}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-                            <Setter Property="TextWrapping" Value="NoWrap"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#2B2B2B"/>
+                        <Setter Property="Padding" Value="2,0,0,0"/>
+                        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
 
-                <DataGridTextColumn Header="Artist" Binding="{Binding Artist}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-                            <Setter Property="TextWrapping" Value="NoWrap"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                
-                <DataGridTextColumn Header="Album" Binding="{Binding Album}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-                            <Setter Property="TextWrapping" Value="NoWrap"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Title" Binding="{Binding Title}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                <Setter Property="TextWrapping" Value="NoWrap"/>
 
-            </DataGrid.Columns>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
-        </DataGrid>
+                    <DataGridTextColumn Header="Artist" Binding="{Binding Artist}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                <Setter Property="TextWrapping" Value="NoWrap"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="Album" Binding="{Binding Album}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                <Setter Property="TextWrapping" Value="NoWrap"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                </DataGrid.Columns>
+
+            </DataGrid>
+        </Grid>
 
         <Grid x:Name="Playlists_section"
               Grid.Row="2"
@@ -336,23 +370,61 @@
               Width="160"
               Background="#1E1E1E"
               Margin="0,0,0,10"
-              Visibility="Collapsed">
+              Visibility="Visible">
 
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <!-- New Playlist -->
-                <Button x:Name="NewPlaylistBtn"
-                    Content="New Playlist"
-                    Height="30"
-                    Margin="5"
-                    Click="NewPlaylist_Click"/>
 
-                <!-- List -->
+            <!-- Header with button -->
+            <Grid Grid.Row="0" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Playlists"
+                       VerticalAlignment="Center"
+                       Foreground="White"
+                       FontWeight="Bold"/>
+
+                <Button Grid.Column="1"
+                        x:Name="NewPlaylistBtn"
+                        Content="+"
+                        Width="24"
+                        Height="24"
+                        Margin="5,0,0,0"
+                        Click="NewPlaylist_Click"/>
+            </Grid>
+
+            <Grid Grid.Row="1" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- New Playlist Button -->
+                <Button x:Name="AddSong"
+                        IsEnabled="False"
+                        Content="Add"
+                        Height="30"
+                        Margin="5"
+                        Click="AddSong_Click"/>
+
+                <Button x:Name="DeleteSong"
+                        IsEnabled="False"
+                        Grid.Column="1"
+                        Content="Delete"
+                        Height="30"
+                        Margin="5"
+                        Click="Delete_Click"/>
+            </Grid>
+            <!-- List -->
                 <ListView x:Name="PlaylistSelection"
-                    Grid.Row="1"
+                    Grid.Row="2"
                     Margin="5,0,5,5"
                     Background="#222"
                     BorderThickness="0"
