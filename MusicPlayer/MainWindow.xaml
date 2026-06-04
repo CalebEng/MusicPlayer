@@ -369,7 +369,7 @@
               Width="160"
               Background="#1E1E1E"
               Margin="0,0,0,10"
-              Visibility="Visible">
+              Visibility="Collapsed">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

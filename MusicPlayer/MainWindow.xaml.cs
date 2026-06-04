@@ -22,7 +22,8 @@ namespace MusicPlayer
         private List<string> playlist = new List<string>();
         private List<Playlist> playlists = new();
         private Playlist currentPlaylist;
-        private List<SongInfo> librarySongs = new();
+        private SongInfo currentSong;
+        private List<SongInfo> songQueue;
 
         private int currentTrackIndex = 0;
         private bool loopPlaylist = false;
@@ -54,7 +55,7 @@ namespace MusicPlayer
             if (!string.IsNullOrEmpty(musicFolderPath) && Directory.Exists(musicFolderPath))
             {
                 LoadPlaylist(musicFolderPath);
-                string songFile = currentPlaylist.Songs[currentTrackIndex].FilePath;
+                string songFile = songQueue[currentTrackIndex].FilePath;
                 if (songFile != null)
                 {
                     LoadSongInfo(songFile);
@@ -145,7 +146,9 @@ namespace MusicPlayer
                         Title = tagFile.Tag.Title,
                         Album = tagFile.Tag.Album,
                         Length = tagFile.Properties.Duration.ToString(@"mm\:ss"),
-                        FilePath = path
+                        FilePath = path,
+                        Id = newPlaylist.Songs.Count > 0 ? newPlaylist.Songs[newPlaylist.Songs.Count - 1].Id + 1 : 0
+
                     });
                 }
                 catch
@@ -155,6 +158,7 @@ namespace MusicPlayer
             }
             playlists.Insert(0, newPlaylist);
             currentPlaylist = newPlaylist;
+            songQueue = currentPlaylist.Songs.ToList();
             PlaylistSelection.ItemsSource = playlists;
 
             currentTrackIndex = 0;
@@ -178,7 +182,8 @@ namespace MusicPlayer
                     ArtistName.Text = "Error";
                     return;
                 }
-                string songFile = currentPlaylist.Songs[currentTrackIndex].FilePath;
+                string songFile = songQueue[currentTrackIndex].FilePath;
+                currentSong = songQueue[currentTrackIndex];
 
                 LoadSongInfo(songFile);
                 PlaySong(songFile);
@@ -237,7 +242,7 @@ namespace MusicPlayer
                     {
                         audioFile.Position = 0;
                     }
-                    PlaySong(currentPlaylist.Songs[currentTrackIndex].FilePath);
+                    PlaySong(songQueue[currentTrackIndex].FilePath);
                     Play.Tag = "/Art/pause.png";
                     Play.Uid = "Art/pause-highlight.png";
                     running = true;
@@ -245,7 +250,8 @@ namespace MusicPlayer
                 else
                 {
                     currentTrackIndex = (currentTrackIndex + 1) % currentPlaylist.Songs.Count;
-                    string nextSong = currentPlaylist.Songs[currentTrackIndex].FilePath;
+                    string nextSong = songQueue[currentTrackIndex].FilePath;
+                    currentSong = songQueue[currentTrackIndex];
                     LoadSongInfo(nextSong);
                     PlaySong(nextSong);
 
@@ -262,7 +268,8 @@ namespace MusicPlayer
 
             currentTrackIndex = (currentTrackIndex + 1) % currentPlaylist.Songs.Count;
 
-            string nextSong = currentPlaylist.Songs[currentTrackIndex].FilePath;
+            string nextSong = songQueue[currentTrackIndex].FilePath;
+            currentSong = songQueue[currentTrackIndex];
             LoadSongInfo(nextSong);
             PlaySong(nextSong);
 
@@ -276,7 +283,8 @@ namespace MusicPlayer
             if (currentPlaylist.Songs.Count == 0) return;
             currentTrackIndex = (currentTrackIndex - 1 + currentPlaylist.Songs.Count) % currentPlaylist.Songs.Count;
 
-            string prevSong = currentPlaylist.Songs[currentTrackIndex].FilePath;
+            string prevSong = songQueue[currentTrackIndex].FilePath;
+            currentSong = songQueue[currentTrackIndex];
             LoadSongInfo(prevSong);
             PlaySong(prevSong);
 
@@ -402,6 +410,15 @@ namespace MusicPlayer
                 Shuffle.Content = "shuff";
                 Shuffle.Tag = "/Art/shuffle.png";
                 Shuffle.Uid = "/Art/shuffle-highlight.png";
+                for(int i =0; i< songQueue.Count-1; i++)
+                {
+                    var temp = songQueue[i];
+                    int randomIndex = new Random().Next(i, songQueue.Count);
+                    songQueue[i] = songQueue[randomIndex];
+                    songQueue[randomIndex] = temp;
+                }
+                LibraryGrid.ItemsSource = null;
+                LibraryGrid.ItemsSource = currentPlaylist.Songs;
             }
             else
             {
@@ -453,6 +470,7 @@ namespace MusicPlayer
             if (PlaylistSelection.SelectedItem is Playlist selected)
             {
                 currentPlaylist = selected;
+                songQueue = selected.Songs.ToList();
 
                 LibraryGrid.ItemsSource = currentPlaylist.Songs;
 
@@ -466,7 +484,7 @@ namespace MusicPlayer
                 }
                 else
                 {
-                    string songFile = currentPlaylist.Songs[currentTrackIndex].FilePath;
+                    string songFile = songQueue[currentTrackIndex].FilePath;
 
                     LoadSongInfo(songFile);
                 }
@@ -504,7 +522,6 @@ namespace MusicPlayer
             Playlists_section.Visibility = Visibility.Collapsed;
             Playlists.Content = "Playlists";
 
-            SavePlaylist();
         }
 
         private void AddSong_Click(object sender, RoutedEventArgs e)
@@ -530,7 +547,7 @@ namespace MusicPlayer
                 if (song == null || playlist == null || playlist.Name == "All Songs") return;
 
                 playlist.Songs.Add(song);
-                song.Id= playlist.Songs.Count-1;
+                songQueue.Add(song);
                 librarySection.Visibility = Visibility.Collapsed;
                 PlayerView.Visibility = Visibility.Visible;
                 LibraryGrid.SelectedItem = null;
@@ -538,7 +555,7 @@ namespace MusicPlayer
                 isAddingSongs = false;
                 LibraryGrid.ItemsSource = playlist.Songs;
 
-                string songFile = currentPlaylist.Songs[currentTrackIndex].FilePath;
+                string songFile = songQueue[currentTrackIndex].FilePath;
 
                 LoadSongInfo(songFile);
                 SavePlaylist();
@@ -550,7 +567,7 @@ namespace MusicPlayer
 
                 if(song == null || playlist == null || playlist.Name == "All Songs") return;
                 
-                if(song.Id == currentTrackIndex)
+                if(currentSong != null && song.Id == currentSong.Id)
                 {
                     ClearCurrentSong();
                     currentTrackIndex = 0;
@@ -558,7 +575,8 @@ namespace MusicPlayer
                     ArtistName.Text = "Select a song to play";
                     AlbumArt.Source = null;
                 }
-                playlist.Songs.RemoveAt(song.Id);
+                playlist.Songs.RemoveAll(x=> x.Id == song.Id);
+                songQueue.RemoveAll(x => x.Id == song.Id);
 
                 librarySection.Visibility = Visibility.Collapsed;
                 PlayerView.Visibility= Visibility.Visible;
@@ -644,9 +662,10 @@ namespace MusicPlayer
             {
                 ClearCurrentSong();
                 currentPlaylist = playlists[0];
+                songQueue = currentPlaylist.Songs.ToList();
                 LibraryGrid.ItemsSource = currentPlaylist.Songs;
                 currentTrackIndex = 0;
-                var temp = currentPlaylist.Songs[currentTrackIndex].FilePath;
+                var temp = songQueue[currentTrackIndex].FilePath;
 
                 LoadSongInfo(temp);
             }
