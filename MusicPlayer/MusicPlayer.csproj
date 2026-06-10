@@ -7,11 +7,29 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
+    <ApplicationIcon>Art\SL-logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Art\add-playlist-highlight.png" />
+    <None Remove="Art\add-playlist.png" />
+    <None Remove="Art\add-song-highlight.png" />
+    <None Remove="Art\add-song.png" />
     <None Remove="Art\close.png" />
     <None Remove="Art\close_highlight.png" />
+    <None Remove="Art\delete-playlist-highlight.png" />
+    <None Remove="Art\delete-playlist.png" />
+    <None Remove="Art\delete-song-highlight.png" />
+    <None Remove="Art\delete-song.png" />
+    <None Remove="Art\folder-close-highlight.png" />
+    <None Remove="Art\folder-close.png" />
+    <None Remove="Art\folder-highlight.png" />
+    <None Remove="Art\folder.png" />
+    <None Remove="Art\library-close-highlight.png" />
+    <None Remove="Art\library-close.png" />
+    <None Remove="Art\library-highlight.png" />
+    <None Remove="Art\library.png" />
+    <None Remove="Art\libraryWindow.png" />
     <None Remove="Art\loop-highlight.png" />
     <None Remove="Art\loop-song-highlight.png" />
     <None Remove="Art\loop-song.png" />
@@ -32,12 +50,45 @@
     <None Remove="Art\pause.png" />
     <None Remove="Art\play-highlight.png" />
     <None Remove="Art\play.png" />
+    <None Remove="Art\playlist-close-highlight.png" />
+    <None Remove="Art\playlist-close.png" />
+    <None Remove="Art\playlist-highlight.png" />
+    <None Remove="Art\playlist-window.png" />
+    <None Remove="Art\playlist.png" />
+    <None Remove="Art\rename-playlist-highlight.png" />
+    <None Remove="Art\rename-playlist.png" />
     <None Remove="Art\shuffle-highlight.png" />
     <None Remove="Art\shuffle.png" />
+    <None Remove="Art\SL-logo.ico" />
     <None Remove="Fonts\Interceptor Bold Italic.otf" />
     <None Remove="Fonts\Interceptor Bold.otf" />
     <None Remove="Fonts\Interceptor Italic.otf" />
     <None Remove="Fonts\Interceptor.otf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Art\SL-logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Art\add-playlist-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\add-playlist.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\add-song-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\add-song.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\delete-song-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\delete-song.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +97,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
@@ -65,6 +121,39 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Art\close_highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\delete-playlist-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\delete-playlist.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\folder-close-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\folder-close.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\folder-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\folder.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\library-close-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\library-close.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\library-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\library.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\libraryWindow.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Art\loop-highlight.png">
@@ -127,10 +216,34 @@
     <Resource Include="Art\play.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Art\playlist-close-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\playlist-close.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\playlist-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\playlist-window.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\playlist.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\rename-playlist-highlight.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\rename-playlist.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Art\shuffle-highlight.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Art\shuffle.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Art\SL-logo.ico">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Fonts\Interceptor Bold Italic.otf">
@@ -145,6 +258,13 @@
     <Resource Include="Fonts\Interceptor.otf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

@@ -422,6 +422,7 @@ namespace MusicPlayer
             }
             else
             {
+                songQueue = currentPlaylist.Songs.ToList();
                 Shuffle.Content = "noShuff";
                 Shuffle.Tag = "/Art/no-shuffle.png";
                 Shuffle.Uid = "/Art/no-shuffle-highlight.png";
@@ -433,18 +434,22 @@ namespace MusicPlayer
             if (librarySection.Visibility == Visibility.Collapsed)
             {
                 librarySection.Visibility = Visibility.Visible;
-                PlayerView.Visibility = Visibility.Collapsed;
+               // PlayerView.Visibility = Visibility.Collapsed;
                 Playlists_section.Visibility = Visibility.Collapsed;
-                Playlists.Content = "Playlists";
-                Library.Content = "Close";
+                Playlists.Tag = "/Art/playlist.png";
+                Playlists.Uid = "/Art/playlist-highlight.png";
+                Library.Tag = "/Art/library-close.png";
+                Library.Uid = "/Art/library-close-highlight.png";
             }
             else
             {
                 librarySection.Visibility = Visibility.Collapsed;
-                PlayerView.Visibility = Visibility.Visible;
+               // PlayerView.Visibility = Visibility.Visible;
                 Playlists_section.Visibility = Visibility.Collapsed;
-                Playlists.Content = "Playlists";
-                Library.Content = "Library";
+                Playlists.Tag = "/Art/playlist.png";
+                Playlists.Uid = "/Art/playlist-highlight.png";
+                Library.Tag = "/Art/library.png";
+                Library.Uid = "/Art/library-highlight.png";
             }
         }
 
@@ -453,12 +458,14 @@ namespace MusicPlayer
             if (Playlists_section.Visibility == Visibility.Collapsed)
             {
                 Playlists_section.Visibility = Visibility.Visible;
-                Playlists.Content = "Close";
+                Playlists.Tag = "/Art/playlist-close.png";
+                Playlists.Uid = "/Art/playlist-close-highlight.png";
             }
             else
             {
                 Playlists_section.Visibility = Visibility.Collapsed;
-                Playlists.Content = "Playlists";
+                Playlists.Tag = "/Art/playlist.png";
+                Playlists.Uid = "/Art/playlist-highlight.png";
             }
         }
 
@@ -520,8 +527,10 @@ namespace MusicPlayer
             LibraryGrid.ItemsSource = temp.Songs;
             librarySection.Visibility = Visibility.Visible;
             Playlists_section.Visibility = Visibility.Collapsed;
-            Playlists.Content = "Playlists";
-
+            Playlists.Tag = "/Art/playlist.png";
+            Playlists.Uid = "/Art/playlist-highlight.png";
+            Library.Tag = "/Art/library-close.png";
+            Library.Uid = "/Art/library-close-highlight.png";
         }
 
         private void AddSong_Click(object sender, RoutedEventArgs e)
@@ -532,8 +541,11 @@ namespace MusicPlayer
             LibraryGrid.ItemsSource = playlists[0].Songs;
             librarySection.Visibility = Visibility.Visible;
             Playlists_section.Visibility = Visibility.Collapsed;
-            Playlists.Content = "Playlists";
-            
+            Playlists.Tag = "/Art/playlist.png";
+            Playlists.Uid = "/Art/playlist-highlight.png";
+            Library.Tag = "/Art/library-close.png";
+            Library.Uid = "/Art/library-close-highlight.png";
+
 
         }
 
@@ -551,7 +563,8 @@ namespace MusicPlayer
                 librarySection.Visibility = Visibility.Collapsed;
                 PlayerView.Visibility = Visibility.Visible;
                 LibraryGrid.SelectedItem = null;
-                Library.Content = "Library";
+                Library.Tag = "/Art/library.png";
+                Library.Uid = "/Art/library-highlight.png";
                 isAddingSongs = false;
                 LibraryGrid.ItemsSource = playlist.Songs;
 
@@ -575,13 +588,14 @@ namespace MusicPlayer
                     ArtistName.Text = "Select a song to play";
                     AlbumArt.Source = null;
                 }
-                playlist.Songs.RemoveAll(x=> x.Id == song.Id);
-                songQueue.RemoveAll(x => x.Id == song.Id);
+                playlist.Songs.Remove(song);
+                songQueue.Remove(song);
 
                 librarySection.Visibility = Visibility.Collapsed;
                 PlayerView.Visibility= Visibility.Visible;
                 LibraryGrid.SelectedItem= null;
-                Library.Content = "Library";
+                Library.Tag = "/Art/library.png";
+                Library.Uid = "/Art/library-highlight.png";
                 isDeleting = false;
                 LibraryGrid.ItemsSource = null;
                 LibraryGrid.ItemsSource = playlist.Songs;

@@ -5,7 +5,9 @@
         Title="Silverlight FM" Height="600" Width="400"
         MinHeight="600"
         MinWidth="400"
-        WindowStyle="None">
+        WindowStyle="None"
+        
+    >
 
     <Window.Resources>
         <Style x:Key="ImageButton" TargetType="{x:Type Button}">
@@ -105,31 +107,37 @@
         </StackPanel>
 
         <Button x:Name="Library"
-                Content="Library"
                 Grid.Row="1"
                 Grid.Column="0"
                 HorizontalAlignment="Left"
                 Margin="10,0,0,0"
-                Width="37" Height="20" VerticalAlignment="Center" Click="Library_Click"/>
+                Style="{StaticResource ImageButton}"
+                Tag="/Art/library.png"
+                Uid="/Art/library-highlight.png"
+                Width="70" Height="33" VerticalAlignment="Center" Click="Library_Click"/>
         
         <Button x:Name="Playlists"
-                Content="Playlist"
                 Grid.Row="1"
                 Grid.Column="1"
                 HorizontalAlignment="Center"
                 Margin="0,0,0,0"
-                Width="37" Height="20" VerticalAlignment="Center" Click="Playlists_Click"
+                Style="{StaticResource ImageButton}"
+                Tag="/Art/playlist.png"
+                Uid="/Art/playlist-highlight.png"
+                Width="70" Height="33" VerticalAlignment="Center" Click="Playlists_Click"
                 />
 
 
         <!-- Folder Button -->
         <Button x:Name="FolderFinder"
-                Content="Folder"
                 Grid.Row="1"
                 Grid.Column="2"
                 HorizontalAlignment="Right"
                 Margin="0,0,10,0"
-                Click="FindFolder" Width="37" Height="20" VerticalAlignment="Center"/>
+                Style="{StaticResource ImageButton}"
+                Tag="/Art/folder.png"
+                Uid="/Art/folder-highlight.png"
+                Click="FindFolder" Width="70" Height="33" VerticalAlignment="Center"/>
 
 
         <Grid x:Name="PlayerView"
@@ -289,9 +297,11 @@
                     Grid.Row="2"
                     Grid.RowSpan="3"
                     Grid.ColumnSpan="3"
-                    Background="#1E1E1E"
                     Visibility="Collapsed">
-            
+            <Grid.Background>
+                <ImageBrush ImageSource="/Art/libraryWindow.png"/>
+            </Grid.Background>
+
             <DataGrid x:Name = "LibraryGrid"
                   Grid.Row="2"
                   Grid.RowSpan="3"
@@ -367,11 +377,14 @@
               Grid.RowSpan="3"
               Grid.Column="0"
               Width="160"
-              Background="#1E1E1E"
+              Height="440"
               Margin="0,0,0,10"
-              Visibility="Collapsed">
+              Visibility="Hidden">
+            <Grid.Background>
+                <ImageBrush ImageSource="/Art/playlist-window.png"/>
+            </Grid.Background>
 
-                <Grid.RowDefinitions>
+            <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
@@ -379,7 +392,7 @@
 
 
             <!-- Header with button -->
-            <Grid Grid.Row="0" Margin="5,10,0,0">
+            <Grid Grid.Row="0" Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -390,11 +403,17 @@
                         x:Name="RenamePlaylist"
                         Content="N"
                         Width="24"
+                        Style="{StaticResource ImageButton}"
+                        Tag="/Art/rename-playlist.png"
+                        Uid="/Art/rename-playlist-highlight.png"
                         Height="24" Click="RenamePlaylist_Click"/>
                 <Button Grid.Column="1"
                         x:Name="DeletePlaylist"
                         Content="-"
                         Height="24"
+                        Style="{StaticResource ImageButton}"
+                        Tag="/Art/delete-playlist.png"
+                        Uid="/Art/delete-playlist-highlight.png"
                         Width="24" Click="DeletePlaylist_Click"/>
 
                 <Button Grid.Column="2"
@@ -402,7 +421,9 @@
                         Content="+"
                         Width="24"
                         Height="24"
-                        Margin="0,0,0,0"
+                        Style="{StaticResource ImageButton}"
+                        Tag="/Art/add-playlist.png"
+                        Uid="/Art/add-playlist-highlight.png"
                         Click="NewPlaylist_Click"/>
             </Grid>
 
@@ -419,6 +440,9 @@
                         Content="Add"
                         Height="30"
                         Margin="5"
+                        Style="{StaticResource ImageButton}"
+                        Tag="/Art/add-song.png"
+                        Uid="/Art/add-song-highlight.png"
                         Click="AddSong_Click"/>
 
                     <Button x:Name="DeleteSong"
@@ -427,6 +451,9 @@
                         Content="Delete"
                         Height="30"
                         Margin="5"
+                        Style="{StaticResource ImageButton}"
+                        Tag="/Art/delete-song.png"
+                        Uid="/Art/delete-song-highlight.png"
                         Click="Delete_Click"/>
                 </Grid>
                 
@@ -439,14 +466,18 @@
             <!-- List -->
                 <ListView x:Name="PlaylistSelection"
                     Grid.Row="2"
-                    Margin="5,0,5,5"
-                    Background="#222"
+                    VerticalAlignment="Top"
+                    Background="Transparent"
+                    Margin="7,0,7,0"
+                    Height="300"
                     BorderThickness="0"
+                    ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                     SelectionChanged="PlaylistSelection_SelectionChanged">
 
                     <ListView.Resources>
                         <Style TargetType="ListViewItem">
-                            <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Foreground" Value="LightSkyBlue"/>
                             <Setter Property="Padding" Value="10,6"/>
                             <Setter Property="Background" Value="Transparent"/>
                             <Style.Triggers>
